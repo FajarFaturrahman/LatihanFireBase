@@ -1,5 +1,6 @@
 package com.example.latihanfirebase;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,8 +14,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddTrackActivity extends AppCompatActivity {
 
@@ -28,6 +35,8 @@ public class AddTrackActivity extends AppCompatActivity {
 
     DatabaseReference databaseTracks;
 
+    List<Track> tracks;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,8 @@ public class AddTrackActivity extends AppCompatActivity {
         editTextTrackname = findViewById(R.id.editTextTrackName);
         seekBarRating = findViewById(R.id.seekBarRating);
         buttonAddTracks = findViewById(R.id.buttonAddTrack);
+
+        tracks = new ArrayList<>();
 
         listViewTracks = findViewById(R.id.listViewTracks);
 
@@ -55,6 +66,32 @@ public class AddTrackActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 saveTrack();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        databaseTracks.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                tracks.clear();
+
+                for (DataSnapshot trackSnapshot : dataSnapshot.getChildren()){
+                    Track track = trackSnapshot.getValue(Track.class);
+
+                    tracks.add(track);
+                }
+
+                TrackList trackListAdapter = new TrackList(AddTrackActivity.this, tracks);
+                listViewTracks.setAdapter(trackListAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

@@ -11,15 +11,15 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
-public class ArtistList extends ArrayAdapter<Artist> {
+public class TrackList extends ArrayAdapter<Track> {
 
     private Activity context;
-    private List<Artist> artistList;
+    private List<Track> tracks;
 
-    public ArtistList(Activity context, List<Artist> artistList){
-        super(context, R.layout.layout_artist_list, artistList);
+    public TrackList(Activity context, List<Track> tracks){
+        super(context, R.layout.layout_track_list, tracks);
         this.context = context;
-        this.artistList = artistList;
+        this.tracks = tracks;
     }
 
     @NonNull
@@ -27,15 +27,15 @@ public class ArtistList extends ArrayAdapter<Artist> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
 
-        View listViewItem = inflater.inflate(R.layout.layout_artist_list, null, true);
+        View listViewItem = inflater.inflate(R.layout.layout_track_list, null, true);
 
         TextView textViewName = listViewItem.findViewById(R.id.textViewName);
-        TextView textViewGenre = listViewItem.findViewById(R.id.textViewGenre);
+        TextView textViewRating = listViewItem.findViewById(R.id.textViewRating);
 
-        Artist artist = artistList.get(position);
+        Track track = tracks.get(position);
 
-        textViewName.setText(artist.getArtistName());
-        textViewGenre.setText(artist.getArtistGenre());
+        textViewName.setText(track.getTrackName());
+        textViewRating.setText(String.valueOf(track.getTrackRating()));
 
         return  listViewItem;
     }
